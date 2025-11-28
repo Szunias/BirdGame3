@@ -1,0 +1,17 @@
+{
+    "name": "BirdGame.Core",
+    "rootNamespace": "BirdGame.Core",
+    "references": [
+        "Unity.Netcode.Runtime",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

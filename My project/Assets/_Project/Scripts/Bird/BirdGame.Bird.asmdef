@@ -1,0 +1,19 @@
+{
+    "name": "BirdGame.Bird",
+    "rootNamespace": "BirdGame.Bird",
+    "references": [
+        "BirdGame.Core",
+        "Unity.InputSystem",
+        "Unity.Netcode.Runtime",
+        "Unity.Cinemachine"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

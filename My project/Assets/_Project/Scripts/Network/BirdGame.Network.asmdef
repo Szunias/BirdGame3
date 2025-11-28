@@ -1,0 +1,21 @@
+{
+    "name": "BirdGame.Network",
+    "rootNamespace": "BirdGame.Network",
+    "references": [
+        "BirdGame.Core",
+        "BirdGame.Bird",
+        "BirdGame.Gameplay",
+        "BirdGame.UI",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Components"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

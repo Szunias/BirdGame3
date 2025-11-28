@@ -1,0 +1,16 @@
+{
+    "name": "BirdGame.Audio",
+    "rootNamespace": "BirdGame.Audio",
+    "references": [
+        "BirdGame.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
