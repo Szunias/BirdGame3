@@ -3,7 +3,9 @@
     "rootNamespace": "BirdGame.Managers",
     "references": [
         "BirdGame.Core",
-        "Unity.Netcode.Runtime"
+        "BirdGame.Egg",
+        "Unity.Netcode.Runtime",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
