@@ -27,6 +27,8 @@ namespace BirdGame.Bird.Core
         private InputAction _moveAction;
         private InputAction _jumpAction;
         private InputAction _interactAction;
+        private InputAction _throwEggAction;
+        private InputAction _dropEggAction;
 
         private void Awake()
         {
@@ -43,6 +45,8 @@ namespace BirdGame.Bird.Core
             _moveAction = _gameplayMap.FindAction("Move");
             _jumpAction = _gameplayMap.FindAction("Jump");
             _interactAction = _gameplayMap.FindAction("Interact");
+            _throwEggAction = _gameplayMap.FindAction("ThrowEgg");
+            _dropEggAction = _gameplayMap.FindAction("DropEgg");
         }
 
         private void OnEnable()
@@ -63,6 +67,16 @@ namespace BirdGame.Bird.Core
                 _interactAction.performed += InteractPerformed;
                 _interactAction.canceled += InteractReleased;
             }
+
+            if (_throwEggAction != null)
+            {
+                _throwEggAction.performed += ThrowEggPerformed;
+            }
+
+            if (_dropEggAction != null)
+            {
+                _dropEggAction.performed += DropEggPerformed;
+            }
         }
 
         private void OnDisable()
@@ -77,6 +91,16 @@ namespace BirdGame.Bird.Core
             {
                 _interactAction.performed -= InteractPerformed;
                 _interactAction.canceled -= InteractReleased;
+            }
+
+            if (_throwEggAction != null)
+            {
+                _throwEggAction.performed -= ThrowEggPerformed;
+            }
+
+            if (_dropEggAction != null)
+            {
+                _dropEggAction.performed -= DropEggPerformed;
             }
         }
 
@@ -98,6 +122,16 @@ namespace BirdGame.Bird.Core
         private void InteractReleased(InputAction.CallbackContext ctx)
         {
             OnInteractReleased?.Invoke();
+        }
+
+        private void ThrowEggPerformed(InputAction.CallbackContext ctx)
+        {
+            OnThrowEggPressed?.Invoke();
+        }
+
+        private void DropEggPerformed(InputAction.CallbackContext ctx)
+        {
+            OnDropEggPressed?.Invoke();
         }
 
         private void Update()

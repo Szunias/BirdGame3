@@ -10,11 +10,14 @@ namespace BirdGame.Egg
     {
         [Header("Configuration")]
         [SerializeField] private float weight = 1f;
+        [SerializeField] private float throwerIgnoreTime = 0.5f;
 
         private Rigidbody _rigidbody;
         private Collider _collider;
         private IBirdCarrier _currentCarrier;
         private Transform _attachPoint;
+        private Collider _throwerCollider;
+        private float _ignoreCollisionTimer;
 
         private NetworkVariable<bool> _isBeingCarried = new NetworkVariable<bool>(
             false,
@@ -55,6 +58,17 @@ namespace BirdGame.Egg
             {
                 transform.position = _attachPoint.position;
                 transform.rotation = _attachPoint.rotation;
+            }
+
+            // Re-enable collision with thrower after timer
+            if (_throwerCollider != null && _ignoreCollisionTimer > 0)
+            {
+                _ignoreCollisionTimer -= Time.deltaTime;
+                if (_ignoreCollisionTimer <= 0)
+                {
+                    Physics.IgnoreCollision(_collider, _throwerCollider, false);
+                    _throwerCollider = null;
+                }
             }
         }
 
@@ -102,6 +116,21 @@ namespace BirdGame.Egg
 
         public void OnThrown(Vector3 throwVelocity)
         {
+            // Store thrower collider to ignore collision temporarily
+            if (_currentCarrier != null)
+            {
+                var carrierTransform = _currentCarrier.CarryAttachPoint;
+                if (carrierTransform != null)
+                {
+                    _throwerCollider = carrierTransform.GetComponentInParent<Collider>();
+                    if (_throwerCollider != null)
+                    {
+                        Physics.IgnoreCollision(_collider, _throwerCollider, true);
+                        _ignoreCollisionTimer = throwerIgnoreTime;
+                    }
+                }
+            }
+
             _currentCarrier = null;
             _attachPoint = null;
 
