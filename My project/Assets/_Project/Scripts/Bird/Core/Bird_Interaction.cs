@@ -37,23 +37,30 @@ namespace BirdGame.Bird.Core
         {
             if (_isHolding) return;
 
-            var colliders = Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
+            // If no layer mask set, search all layers
+            var colliders = interactableLayer == 0
+                ? Physics.OverlapSphere(transform.position, detectionRadius)
+                : Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
 
             IInteractable closest = null;
             float closestDist = float.MaxValue;
 
             foreach (var col in colliders)
             {
-                if (col.TryGetComponent<IInteractable>(out var interactable))
+                // Try on collider object first, then parent
+                var interactable = col.GetComponent<IInteractable>();
+                if (interactable == null)
                 {
-                    if (interactable.CanInteract(gameObject))
+                    interactable = col.GetComponentInParent<IInteractable>();
+                }
+
+                if (interactable != null && interactable.CanInteract(gameObject))
+                {
+                    float dist = Vector3.Distance(transform.position, col.transform.position);
+                    if (dist < closestDist)
                     {
-                        float dist = Vector3.Distance(transform.position, col.transform.position);
-                        if (dist < closestDist)
-                        {
-                            closest = interactable;
-                            closestDist = dist;
-                        }
+                        closest = interactable;
+                        closestDist = dist;
                     }
                 }
             }
@@ -78,7 +85,6 @@ namespace BirdGame.Bird.Core
         {
             if (_currentTarget == null) return;
             if (!_currentTarget.CanInteract(gameObject)) return;
-
             _isHolding = true;
             _holdTimer = 0f;
             _currentTarget.OnInteractionStart(gameObject);
@@ -130,7 +136,9 @@ namespace BirdGame.Bird.Core
         private void CompleteInteractionServerRpc()
         {
             // Server handles the actual pickup
-            var colliders = Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
+            var colliders = interactableLayer == 0
+                ? Physics.OverlapSphere(transform.position, detectionRadius)
+                : Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
 
             foreach (var col in colliders)
             {

@@ -1,4 +1,5 @@
 using BirdGame.Core.Interfaces;
+using BirdGame.Egg.UI;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,8 +11,12 @@ namespace BirdGame.Egg
         [Header("Configuration")]
         [SerializeField] private float holdDuration = 1f;
 
+        [Header("UI")]
+        [SerializeField] private Egg_ProgressUI progressUI;
+
         private Egg_Base _egg;
         private GameObject _currentInteractor;
+        private float _interactionTimer;
 
         public float HoldDuration => holdDuration;
 
@@ -36,11 +41,23 @@ namespace BirdGame.Egg
         public void OnInteractionStart(GameObject interactor)
         {
             _currentInteractor = interactor;
+            _interactionTimer = 0f;
+            progressUI?.Show();
+        }
+
+        private void Update()
+        {
+            if (_currentInteractor == null) return;
+
+            _interactionTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(_interactionTimer / holdDuration);
+            progressUI?.SetProgress(progress);
         }
 
         public void OnInteractionComplete(GameObject interactor)
         {
             _currentInteractor = null;
+            progressUI?.Hide();
 
             if (!IsServer) return;
 
@@ -55,6 +72,7 @@ namespace BirdGame.Egg
             if (_currentInteractor == interactor)
             {
                 _currentInteractor = null;
+                progressUI?.Hide();
             }
         }
 

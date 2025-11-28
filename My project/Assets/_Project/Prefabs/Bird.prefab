@@ -178,6 +178,8 @@ GameObject:
   - component: {fileID: 3512661342305463902}
   - component: {fileID: 5709818282502680625}
   - component: {fileID: 6194940161883788872}
+  - component: {fileID: 3823334980123759082}
+  - component: {fileID: 4748808258088362514}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -467,6 +469,47 @@ MonoBehaviour:
   OnEggThrown:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3823334980123759082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565036864513149013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bddd0ef076794a43994e59cb53d13b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: BirdGame.Bird::BirdGame.Bird.Core.Bird_Interaction
+  ShowTopMostFoldoutHeaderGroup: 1
+  detectionRadius: 4.65
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  OnInteractionStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInteractionCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInteractionCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInteractionProgress:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4748808258088362514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565036864513149013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edbf97b7ecf46ec47a05789b15488c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: BirdGame.Bird::BirdGame.Bird.Core.Bird_InteractionInput
 --- !u!1 &5804087556882151615
 GameObject:
   m_ObjectHideFlags: 0
