@@ -124,30 +124,70 @@
     - Add "Loot Beam" shader/script for dropped eggs.
     - Add screen shake on impact.
 
+### Day 11: Lobby & Matchmaking
+- [ ] **Task 11.1: Network Lobby**
+    - Create `Net_Lobby.cs` (NetworkBehaviour).
+    - Implement player join/leave handling.
+    - Sync connected players list via `NetworkList`.
+    - Implement Ready system (all players must ready up).
+- [ ] **Task 11.2: Lobby UI**
+    - Create `UI_Lobby.cs` - player list, ready button, start button (host only).
+    - Create `UI_MainMenu.cs` - Host/Join/Settings buttons.
+    - Implement server browser or direct connect input.
+- [ ] **Task 11.3: Scene Flow**
+    - Create MainMenu scene, Lobby scene, Game scene.
+    - Implement `Mgr_SceneLoader.cs` for networked scene transitions.
+
+### Day 12: Character Selection
+- [ ] **Task 12.1: Bird Data System**
+    - Create `Data_BirdDefinition` (ScriptableObject) - stats, abilities, prefab reference, unlock status.
+    - Create `Data_BirdRoster` (ScriptableObject) - collection of all birds.
+- [ ] **Task 12.2: Selection Logic**
+    - Create `Net_CharacterSelect.cs` - sync selected bird per player.
+    - Implement team-based restrictions (optional: no duplicate birds per team).
+    - Lock selection on ready.
+- [ ] **Task 12.3: Selection UI**
+    - Create `UI_CharacterSelect.cs` - bird grid, stats preview, ability descriptions.
+    - Create 3D bird preview (rotating model).
+    - Show locked/unlocked status per bird.
+
+### Day 13: Proximity Voice Chat
+- [ ] **Task 13.1: Voice Integration**
+    - Install Vivox or Dissonance Voice Chat package.
+    - Create `Voice_Manager.cs` - initialize voice system.
+    - Implement proximity-based volume falloff.
+- [ ] **Task 13.2: Voice Settings**
+    - Create `Voice_Proximity.cs` - calculate volume based on distance.
+    - Configure max hearing distance and falloff curve.
+    - Implement team-only vs all-talk modes.
+- [ ] **Task 13.3: Voice UI**
+    - Create `UI_VoiceIndicator.cs` - show who is speaking.
+    - Create `UI_VoiceSettings.cs` - mute, volume, push-to-talk toggle.
+    - Implement per-player mute functionality.
+
 ---
 
 ## 🔴 PHASE 3: CONTENT SCALING (AI Heavy)
 *Goal: Fleshing out the roster and map.*
 
-### Day 11-12: Bird Roster Implementation (Batch 1)
+### Day 14-15: Bird Roster Implementation (Batch 1)
 - [ ] **Hummingbird:** `Ability_Zip`, `Ability_NectarRush`.
 - [ ] **Shoebill:** `Ability_DeathStare` (Raycast logic), `Ability_Intimidate`.
 - [ ] **Penguin:** `Ability_IceWall` (Mesh generation), `Ability_BellySlide`.
 
-### Day 13-14: Bird Roster Implementation (Batch 2)
+### Day 16-17: Bird Roster Implementation (Batch 2)
 - [ ] **Owl:** `Ability_NightVision` (Shader replacement/Outline), `Passive_Silent`.
 - [ ] **Pelican:** `Ability_Scoop` (Complex parenting logic - "No Russian Dolls" rule).
 - [ ] **Cassowary:** `Ability_MurderKick` (High force physics), `Ability_Rampage`.
 
-### Day 15: Map Mechanics
+### Day 18: Map Mechanics
 - [ ] **Jump Pads:** Create `Map_JumpPad.cs` (Physics launch).
 - [ ] **Biomes:** Create Data assets for different ground friction/visuals.
 - [ ] **Dynamic Events:** Implement `Mgr_Events.cs` (Worm Rain, Blackout).
 
-### Day 16: Voice Chat & Anti-Toxicity
-- [ ] **Voice Integration:** Set up Vivox/Photon Voice packages.
+### Day 19: Parrot Voice Recording & Safety
 - [ ] **Parrot Recorder:** Implement Circular Buffer for `Ability_Chatter`.
-- [ ] **Safety:** Implement Mute/Report UI.
+- [ ] **Safety:** Implement Report UI and moderation tools.
 
 ---
 

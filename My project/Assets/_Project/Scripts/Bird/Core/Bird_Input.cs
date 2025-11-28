@@ -56,6 +56,10 @@ namespace BirdGame.Bird.Core
                 _gameplayMap.Enable();
             }
 
+            // Lock and hide cursor
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             if (_jumpAction != null)
             {
                 _jumpAction.performed += JumpPerformed;
@@ -81,6 +85,10 @@ namespace BirdGame.Bird.Core
 
         private void OnDisable()
         {
+            // Unlock cursor when disabled
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             if (_gameplayMap != null) _gameplayMap.Disable();
             if (_jumpAction != null)
             {

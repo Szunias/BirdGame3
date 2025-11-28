@@ -3,6 +3,7 @@
     "rootNamespace": "BirdGame.UI",
     "references": [
         "BirdGame.Core",
+        "BirdGame.Managers",
         "Unity.TextMeshPro",
         "Unity.Netcode.Runtime"
     ],
