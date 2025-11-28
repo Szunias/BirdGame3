@@ -135,5 +135,17 @@ namespace BirdGame.Bird.Core
         {
             ThrowOne(transform.forward + Vector3.up * 0.3f, throwForce);
         }
+
+        public ICarryable RemoveOneForDeposit()
+        {
+            if (_carriedItems.Count == 0) return null;
+
+            var item = _carriedItems[_carriedItems.Count - 1];
+            _carriedItems.RemoveAt(_carriedItems.Count - 1);
+            item.ClearAttachPoint();
+
+            return item;
+        }
+
     }
 }

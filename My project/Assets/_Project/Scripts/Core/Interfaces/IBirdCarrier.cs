@@ -13,5 +13,6 @@ namespace BirdGame.Core.Interfaces
         void DropAll();
         void DropOne();
         void ThrowOne(Vector3 direction, float force);
+        ICarryable RemoveOneForDeposit();
     }
 }
