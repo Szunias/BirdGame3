@@ -11,5 +11,6 @@ namespace BirdGame.Core.Interfaces
         void OnPickedUp(IBirdCarrier carrier);
         void OnDropped(Vector3 dropVelocity);
         void OnThrown(Vector3 throwVelocity);
+        void ClearAttachPoint();
     }
 }

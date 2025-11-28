@@ -57,6 +57,10 @@ namespace BirdGame.Bird.Core
             {
                 var item = _carriedItems[i];
                 _carriedItems.RemoveAt(i);
+
+                // Notify egg to detach visually
+                NotifyDetach(item);
+
                 item.OnDropped(dropVelocity);
                 OnEggDropped?.Invoke(item);
             }
@@ -74,6 +78,9 @@ namespace BirdGame.Bird.Core
 
             var item = _carriedItems[_carriedItems.Count - 1];
             _carriedItems.RemoveAt(_carriedItems.Count - 1);
+
+            // Notify egg to detach visually
+            NotifyDetach(item);
 
             var dropVelocity = Vector3.down * dropForce;
             item.OnDropped(dropVelocity);
@@ -93,9 +100,17 @@ namespace BirdGame.Bird.Core
             var item = _carriedItems[_carriedItems.Count - 1];
             _carriedItems.RemoveAt(_carriedItems.Count - 1);
 
+            // Notify egg to detach visually
+            NotifyDetach(item);
+
             var throwVelocity = direction.normalized * force;
             item.OnThrown(throwVelocity);
             OnEggThrown?.Invoke(item);
+        }
+
+        private void NotifyDetach(ICarryable item)
+        {
+            item.ClearAttachPoint();
         }
 
         [ServerRpc]

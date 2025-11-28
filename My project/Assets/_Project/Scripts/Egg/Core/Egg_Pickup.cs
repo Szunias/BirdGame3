@@ -2,15 +2,11 @@ using BirdGame.Core.Interfaces;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace BirdGame.Gameplay.Egg
+namespace BirdGame.Egg
 {
     [RequireComponent(typeof(Egg_Base))]
     public class Egg_Pickup : NetworkBehaviour
     {
-        [Header("Configuration")]
-        [SerializeField] private float pickupRadius = 2f;
-        [SerializeField] private LayerMask birdLayer;
-
         private Egg_Base _egg;
 
         private void Awake()
@@ -36,7 +32,14 @@ namespace BirdGame.Gameplay.Egg
         {
             if (carrier.TryPickup(_egg))
             {
-                AttachToCarrierClientRpc(carrier.CarryAttachPoint.GetComponent<NetworkObject>().NetworkObjectId);
+                // Find NetworkObject on carrier's root (Bird prefab)
+                var carrierTransform = carrier.CarryAttachPoint;
+                if (carrierTransform == null) return;
+
+                var networkObj = carrierTransform.GetComponentInParent<NetworkObject>();
+                if (networkObj == null) return;
+
+                AttachToCarrierClientRpc(networkObj.NetworkObjectId);
             }
         }
 
@@ -45,12 +48,11 @@ namespace BirdGame.Gameplay.Egg
         {
             if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(carrierNetworkId, out var carrierNetObj))
             {
-                var attachPoint = carrierNetObj.GetComponent<IBirdCarrier>()?.CarryAttachPoint;
-                if (attachPoint != null)
+                var carrier = carrierNetObj.GetComponent<IBirdCarrier>();
+                if (carrier?.CarryAttachPoint != null)
                 {
-                    transform.SetParent(attachPoint);
-                    transform.localPosition = Vector3.zero;
-                    transform.localRotation = Quaternion.identity;
+                    // Don't use SetParent - instead set attach point for following
+                    _egg.SetAttachPoint(carrier.CarryAttachPoint);
                 }
             }
         }
@@ -58,7 +60,7 @@ namespace BirdGame.Gameplay.Egg
         [ClientRpc]
         public void DetachFromCarrierClientRpc()
         {
-            transform.SetParent(null);
+            _egg.ClearAttachPoint();
         }
     }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "BirdGame.Gameplay",
-    "rootNamespace": "BirdGame.Gameplay",
+    "name": "BirdGame.Egg",
+    "rootNamespace": "BirdGame.Egg",
     "references": [
         "BirdGame.Core",
         "Unity.Netcode.Runtime"

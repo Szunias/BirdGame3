@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 6434047620323597355}
   - component: {fileID: 3512661342305463902}
   - component: {fileID: 5709818282502680625}
+  - component: {fileID: 6194940161883788872}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -200,6 +201,7 @@ Transform:
   - {fileID: 1128167516675785612}
   - {fileID: 2015820373096122697}
   - {fileID: 6958864832360210941}
+  - {fileID: 5674947089877102926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &210533366022443731
@@ -359,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3412579500
+  GlobalObjectIdHash: 3427616323
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -439,6 +441,63 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6194940161883788872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565036864513149013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f38eb3699e74f844a92ea45d751ac9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: BirdGame.Bird::BirdGame.Bird.Core.Bird_EggCarrier
+  ShowTopMostFoldoutHeaderGroup: 1
+  carryCapacity: 3
+  carryAttachPoint: {fileID: 5674947089877102926}
+  throwForce: 15
+  dropForce: 2
+  OnEggPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEggDropped:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEggThrown:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &5804087556882151615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5674947089877102926}
+  m_Layer: 0
+  m_Name: EggAttachPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5674947089877102926
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5804087556882151615}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.162, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8746122155347779113}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7428797328111470102
 PrefabInstance:
   m_ObjectHideFlags: 0

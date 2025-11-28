@@ -2,7 +2,7 @@ using BirdGame.Core.Interfaces;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace BirdGame.Gameplay.Egg
+namespace BirdGame.Egg
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]
@@ -10,11 +10,11 @@ namespace BirdGame.Gameplay.Egg
     {
         [Header("Configuration")]
         [SerializeField] private float weight = 1f;
-        [SerializeField] private float pickupRadius = 1.5f;
 
         private Rigidbody _rigidbody;
         private Collider _collider;
         private IBirdCarrier _currentCarrier;
+        private Transform _attachPoint;
 
         private NetworkVariable<bool> _isBeingCarried = new NetworkVariable<bool>(
             false,
@@ -48,6 +48,16 @@ namespace BirdGame.Gameplay.Egg
             _isBeingCarried.OnValueChanged -= OnCarriedStateChanged;
         }
 
+        private void LateUpdate()
+        {
+            // Follow attach point when being carried (on all clients)
+            if (_isBeingCarried.Value && _attachPoint != null)
+            {
+                transform.position = _attachPoint.position;
+                transform.rotation = _attachPoint.rotation;
+            }
+        }
+
         private void OnCarriedStateChanged(bool previous, bool current)
         {
             _collider.enabled = !current;
@@ -58,6 +68,16 @@ namespace BirdGame.Gameplay.Egg
             }
         }
 
+        public void SetAttachPoint(Transform attachPoint)
+        {
+            _attachPoint = attachPoint;
+        }
+
+        public void ClearAttachPoint()
+        {
+            _attachPoint = null;
+        }
+
         public void OnPickedUp(IBirdCarrier carrier)
         {
             _currentCarrier = carrier;
@@ -65,14 +85,13 @@ namespace BirdGame.Gameplay.Egg
             if (IsServer)
             {
                 _isBeingCarried.Value = true;
-                _rigidbody.linearVelocity = Vector3.zero;
-                _rigidbody.angularVelocity = Vector3.zero;
             }
         }
 
         public void OnDropped(Vector3 dropVelocity)
         {
             _currentCarrier = null;
+            _attachPoint = null;
 
             if (IsServer)
             {
@@ -84,6 +103,7 @@ namespace BirdGame.Gameplay.Egg
         public void OnThrown(Vector3 throwVelocity)
         {
             _currentCarrier = null;
+            _attachPoint = null;
 
             if (IsServer)
             {
@@ -98,6 +118,7 @@ namespace BirdGame.Gameplay.Egg
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
             _collider.enabled = true;
+            _attachPoint = null;
 
             if (IsServer)
             {
@@ -109,6 +130,7 @@ namespace BirdGame.Gameplay.Egg
         public void OnDespawn()
         {
             _currentCarrier = null;
+            _attachPoint = null;
         }
     }
 }
