@@ -26,6 +26,7 @@ namespace BirdGame.Bird.Core
         private InputActionMap _gameplayMap;
         private InputAction _moveAction;
         private InputAction _jumpAction;
+        private InputAction _interactAction;
 
         private void Awake()
         {
@@ -41,6 +42,7 @@ namespace BirdGame.Bird.Core
 
             _moveAction = _gameplayMap.FindAction("Move");
             _jumpAction = _gameplayMap.FindAction("Jump");
+            _interactAction = _gameplayMap.FindAction("Interact");
         }
 
         private void OnEnable()
@@ -55,6 +57,12 @@ namespace BirdGame.Bird.Core
                 _jumpAction.performed += JumpPerformed;
                 _jumpAction.canceled += JumpReleased;
             }
+
+            if (_interactAction != null)
+            {
+                _interactAction.performed += InteractPerformed;
+                _interactAction.canceled += InteractReleased;
+            }
         }
 
         private void OnDisable()
@@ -64,6 +72,11 @@ namespace BirdGame.Bird.Core
             {
                 _jumpAction.performed -= JumpPerformed;
                 _jumpAction.canceled -= JumpReleased;
+            }
+            if (_interactAction != null)
+            {
+                _interactAction.performed -= InteractPerformed;
+                _interactAction.canceled -= InteractReleased;
             }
         }
 
@@ -75,6 +88,16 @@ namespace BirdGame.Bird.Core
         private void JumpReleased(InputAction.CallbackContext ctx)
         {
             OnJumpReleased?.Invoke();
+        }
+
+        private void InteractPerformed(InputAction.CallbackContext ctx)
+        {
+            OnInteractPressed?.Invoke();
+        }
+
+        private void InteractReleased(InputAction.CallbackContext ctx)
+        {
+            OnInteractReleased?.Invoke();
         }
 
         private void Update()

@@ -5,26 +5,56 @@ using UnityEngine;
 namespace BirdGame.Egg
 {
     [RequireComponent(typeof(Egg_Base))]
-    public class Egg_Pickup : NetworkBehaviour
+    public class Egg_Pickup : NetworkBehaviour, IInteractable
     {
+        [Header("Configuration")]
+        [SerializeField] private float holdDuration = 1f;
+
         private Egg_Base _egg;
+        private GameObject _currentInteractor;
+
+        public float HoldDuration => holdDuration;
 
         private void Awake()
         {
             _egg = GetComponent<Egg_Base>();
         }
 
-        private void OnTriggerEnter(Collider other)
+        public bool CanInteract(GameObject interactor)
         {
-            if (!IsServer) return;
-            if (_egg.IsBeingCarried) return;
+            if (_egg.IsBeingCarried) return false;
+            if (_currentInteractor != null && _currentInteractor != interactor) return false;
 
-            if (other.TryGetComponent<IBirdCarrier>(out var carrier))
+            if (interactor.TryGetComponent<IBirdCarrier>(out var carrier))
             {
-                if (carrier.CanPickup(_egg))
-                {
-                    HandlePickup(carrier);
-                }
+                return carrier.CanPickup(_egg);
+            }
+
+            return false;
+        }
+
+        public void OnInteractionStart(GameObject interactor)
+        {
+            _currentInteractor = interactor;
+        }
+
+        public void OnInteractionComplete(GameObject interactor)
+        {
+            _currentInteractor = null;
+
+            if (!IsServer) return;
+
+            if (interactor.TryGetComponent<IBirdCarrier>(out var carrier))
+            {
+                HandlePickup(carrier);
+            }
+        }
+
+        public void OnInteractionCancel(GameObject interactor)
+        {
+            if (_currentInteractor == interactor)
+            {
+                _currentInteractor = null;
             }
         }
 
@@ -32,7 +62,6 @@ namespace BirdGame.Egg
         {
             if (carrier.TryPickup(_egg))
             {
-                // Find NetworkObject on carrier's root (Bird prefab)
                 var carrierTransform = carrier.CarryAttachPoint;
                 if (carrierTransform == null) return;
 
@@ -51,7 +80,6 @@ namespace BirdGame.Egg
                 var carrier = carrierNetObj.GetComponent<IBirdCarrier>();
                 if (carrier?.CarryAttachPoint != null)
                 {
-                    // Don't use SetParent - instead set attach point for following
                     _egg.SetAttachPoint(carrier.CarryAttachPoint);
                 }
             }
