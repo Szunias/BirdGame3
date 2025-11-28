@@ -498,6 +498,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a26e43a4dea2b243813e39eadbee03e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4556756735552885270}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a26e43a4dea2b243813e39eadbee03e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4202678451334204018}
   m_SourcePrefab: {fileID: 100100000, guid: 4a26e43a4dea2b243813e39eadbee03e, type: 3}
 --- !u!4 &6958864832360210941 stripped
 Transform:
@@ -518,7 +521,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7771253758628576071}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 4a26e43a4dea2b243813e39eadbee03e, type: 3}
   m_Controller: {fileID: 9100000, guid: 3350f6055ab8f334fba507fb9c508116, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -531,3 +534,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4202678451334204018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7771253758628576071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 326f7a872ee58f64fb4f4f1dc42c1627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: BirdGame.Bird::BirdGame.Bird.Visual.Bird_Animator
+  movement: {fileID: 3512661342305463902}

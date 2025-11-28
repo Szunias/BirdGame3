@@ -8,8 +8,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: isFlying
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsFlying
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6115519920191249221}
@@ -63,7 +63,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 6115519920191249221}
-    m_Position: {x: 150, y: 50, z: 0}
+    m_Position: {x: 100, y: 40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8145368656128579688}
     m_Position: {x: 310, y: 140, z: 0}
@@ -76,7 +76,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 140, z: 0}
   m_ExitPosition: {x: 640, y: 70, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -8145368656128579688}
+  m_DefaultState: {fileID: 6115519920191249221}
 --- !u!1101 &-3308777851784787908
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -85,8 +85,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: isFlying
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsFlying
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8145368656128579688}
@@ -111,7 +111,7 @@ AnimatorController:
   m_Name: AC_Koliber
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: isFlying
+  - m_Name: IsFlying
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -151,7 +151,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -887982601649841707, guid: 53c37c25405c0dc41844cfe9f117e3c3, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

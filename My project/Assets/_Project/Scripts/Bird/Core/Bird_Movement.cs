@@ -139,28 +139,32 @@ namespace BirdGame.Bird.Core
             if (_isFlying)
             {
                 // --- FLIGHT ---
-                // Use full 3D camera vector for "W" to allow flying UP/DOWN by looking
-                moveDir = (camForward * _moveInput.y + camRight * _moveInput.x).normalized;
+                // Flatten camera vectors for horizontal movement (WASD = horizontal only)
+                Vector3 flatForward = camForward;
+                flatForward.y = 0;
+                flatForward.Normalize();
+                Vector3 flatRight = camRight;
+                flatRight.y = 0;
+                flatRight.Normalize();
 
-                if (_moveInput.sqrMagnitude > 0.01f)
+                // Horizontal movement from WASD
+                Vector3 horizontalDir = (flatForward * _moveInput.y + flatRight * _moveInput.x).normalized;
+
+                // Calculate target horizontal velocity
+                Vector3 targetHorizontal = horizontalDir * stats.flightSpeed;
+
+                // Smoothly move towards target horizontal velocity
+                float currentY = _velocity.y;
+                Vector3 currentHorizontal = new Vector3(_velocity.x, 0, _velocity.z);
+                Vector3 newHorizontal = Vector3.MoveTowards(currentHorizontal, targetHorizontal, stats.acceleration * Time.deltaTime);
+
+                _velocity = new Vector3(newHorizontal.x, currentY, newHorizontal.z);
+
+                // Rotate to face movement direction
+                if (horizontalDir.sqrMagnitude > 0.01f)
                 {
-                    // Determine speed based on vertical direction
-                    float speed = stats.flightSpeed;
-                    if (moveDir.y > 0.3f) speed = stats.climbSpeed;      // Flying up
-                    else if (moveDir.y < -0.3f) speed = stats.diveSpeed; // Flying down
-
-                    Vector3 targetVelocity = moveDir * speed;
-                    _velocity = Vector3.MoveTowards(_velocity, targetVelocity, stats.acceleration * Time.deltaTime);
-
-                    // Rotate to face move direction
-                    Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+                    Quaternion targetRotation = Quaternion.LookRotation(horizontalDir);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, stats.flightRotationSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    // Hover / Slow down horizontally, maintain Y for flightGravity effect
-                    Vector3 hoverTarget = new Vector3(0f, _velocity.y, 0f);
-                    _velocity = Vector3.MoveTowards(_velocity, hoverTarget, stats.acceleration * Time.deltaTime);
                 }
             }
             else
@@ -192,6 +196,12 @@ namespace BirdGame.Bird.Core
             {
                 // Apply flight gravity (usually 0 for full control, or small value for gradual sink)
                 _velocity.y -= stats.flightGravity * Time.deltaTime;
+
+                // Prevent sinking while holding space - maintain altitude at minimum
+                if (_isSpaceHeld && _velocity.y < 0)
+                {
+                    _velocity.y = 0f;
+                }
             }
             else
             {
