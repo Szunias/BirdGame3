@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f928bd18fef998469283ffd492c2331, type: 3}
+  m_Name: Bird_ShoeBill
+  m_EditorClassIdentifier: BirdGame.Data::BirdGame.Data.Data_BirdDefinition
+  _birdName: ShoeBill
+  _description: strasznyskurwol
+  _icon: {fileID: 0}
+  _birdPrefab: {fileID: 0}
+  _groundSpeed: 10
+  _flightSpeed: 15
+  _maxHealth: 100
+  _previewPrefab: {fileID: 1137202465149882442, guid: eab021bb06e2f6a46a27d2403f7339fe, type: 3}
+  _previewRotation: {x: 0, y: 0, z: 0}
+  _previewScale: 1

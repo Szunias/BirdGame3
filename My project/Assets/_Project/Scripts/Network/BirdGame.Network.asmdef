@@ -4,6 +4,8 @@
     "references": [
         "BirdGame.Core",
         "BirdGame.Bird",
+        "BirdGame.Data",
+        "BirdGame.Managers",
         "BirdGame.Gameplay",
         "BirdGame.UI",
         "Unity.Netcode.Runtime",

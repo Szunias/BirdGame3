@@ -1,12 +1,9 @@
 {
-    "name": "BirdGame.Managers",
-    "rootNamespace": "BirdGame.Managers",
+    "name": "BirdGame.Data",
+    "rootNamespace": "BirdGame.Data",
     "references": [
         "BirdGame.Core",
-        "BirdGame.Data",
-        "BirdGame.Egg",
-        "Unity.Netcode.Runtime",
-        "Unity.InputSystem"
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
