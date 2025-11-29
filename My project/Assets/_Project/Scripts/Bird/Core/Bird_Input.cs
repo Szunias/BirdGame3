@@ -22,6 +22,8 @@ namespace BirdGame.Bird.Core
         public UnityEvent OnInteractReleased;
         public UnityEvent OnThrowEggPressed;
         public UnityEvent OnDropEggPressed;
+        public UnityEvent OnDivePressed;
+        public UnityEvent OnDiveReleased;
 
         private InputActionMap _gameplayMap;
         private InputAction _moveAction;
@@ -29,6 +31,7 @@ namespace BirdGame.Bird.Core
         private InputAction _interactAction;
         private InputAction _throwEggAction;
         private InputAction _dropEggAction;
+        private InputAction _diveAction;
 
         private void Awake()
         {
@@ -47,6 +50,7 @@ namespace BirdGame.Bird.Core
             _interactAction = _gameplayMap.FindAction("Interact");
             _throwEggAction = _gameplayMap.FindAction("ThrowEgg");
             _dropEggAction = _gameplayMap.FindAction("DropEgg");
+            _diveAction = _gameplayMap.FindAction("Dive");
         }
 
         private void OnEnable()
@@ -81,6 +85,12 @@ namespace BirdGame.Bird.Core
             {
                 _dropEggAction.performed += DropEggPerformed;
             }
+
+            if (_diveAction != null)
+            {
+                _diveAction.performed += DivePerformed;
+                _diveAction.canceled += DiveReleased;
+            }
         }
 
         private void OnDisable()
@@ -109,6 +119,12 @@ namespace BirdGame.Bird.Core
             if (_dropEggAction != null)
             {
                 _dropEggAction.performed -= DropEggPerformed;
+            }
+
+            if (_diveAction != null)
+            {
+                _diveAction.performed -= DivePerformed;
+                _diveAction.canceled -= DiveReleased;
             }
         }
 
@@ -140,6 +156,16 @@ namespace BirdGame.Bird.Core
         private void DropEggPerformed(InputAction.CallbackContext ctx)
         {
             OnDropEggPressed?.Invoke();
+        }
+
+        private void DivePerformed(InputAction.CallbackContext ctx)
+        {
+            OnDivePressed?.Invoke();
+        }
+
+        private void DiveReleased(InputAction.CallbackContext ctx)
+        {
+            OnDiveReleased?.Invoke();
         }
 
         private void Update()

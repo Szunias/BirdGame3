@@ -6,33 +6,33 @@ namespace BirdGame.Data
     public class Data_BirdDefinition : ScriptableObject
     {
         [Header("Basic Info")]
-        [SerializeField] private string _birdName;
-        [SerializeField] private string _description;
-        [SerializeField] private Sprite _icon;
+        [SerializeField] private string birdName;
+        [SerializeField] private string description;
+        [SerializeField] private Sprite icon;
 
         [Header("Prefab")]
-        [SerializeField] private GameObject _birdPrefab;
+        [SerializeField] private GameObject birdPrefab;
 
         [Header("Stats")]
-        [SerializeField] private float _groundSpeed = 10f;
-        [SerializeField] private float _flightSpeed = 15f;
-        [SerializeField] private float _maxHealth = 100f;
+        [SerializeField] private float groundSpeed = 10f;
+        [SerializeField] private float flightSpeed = 15f;
+        [SerializeField] private float maxHealth = 100f;
 
         [Header("Preview")]
-        [SerializeField] private GameObject _previewPrefab;
-        [SerializeField] private Vector3 _previewRotation = Vector3.zero;
-        [SerializeField] private float _previewScale = 1f;
+        [SerializeField] private GameObject previewPrefab;
+        [SerializeField] private Vector3 previewRotation = Vector3.zero;
+        [SerializeField] private float previewScale = 1f;
 
         // Public properties for read access
-        public string BirdName => _birdName;
-        public string Description => _description;
-        public Sprite Icon => _icon;
-        public GameObject BirdPrefab => _birdPrefab;
-        public float GroundSpeed => _groundSpeed;
-        public float FlightSpeed => _flightSpeed;
-        public float MaxHealth => _maxHealth;
-        public GameObject PreviewPrefab => _previewPrefab;
-        public Vector3 PreviewRotation => _previewRotation;
-        public float PreviewScale => _previewScale;
+        public string BirdName => birdName;
+        public string Description => description;
+        public Sprite Icon => icon;
+        public GameObject BirdPrefab => birdPrefab;
+        public float GroundSpeed => groundSpeed;
+        public float FlightSpeed => flightSpeed;
+        public float MaxHealth => maxHealth;
+        public GameObject PreviewPrefab => previewPrefab;
+        public Vector3 PreviewRotation => previewRotation;
+        public float PreviewScale => previewScale;
     }
 }

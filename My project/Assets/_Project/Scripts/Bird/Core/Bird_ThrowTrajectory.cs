@@ -3,9 +3,20 @@ using UnityEngine;
 
 namespace BirdGame.Bird.Core
 {
+    /// <summary>
+    /// Handles throw trajectory visualization and prediction.
+    /// Single Responsibility: Trajectory calculation and display.
+    /// </summary>
     [RequireComponent(typeof(Bird_EggCarrier))]
     public class Bird_ThrowTrajectory : NetworkBehaviour
     {
+        #region Constants
+        private const float GRAVITY_MULTIPLIER = 0.5f;
+        private const float QUADRATIC_MULTIPLIER = 2f;
+        private const int QUADRATIC_DISCRIMINANT_MULTIPLIER = 4;
+        #endregion
+
+        #region Serialized Fields
         [Header("Trajectory Settings")]
         [SerializeField] private float throwForce = 15f;
         [SerializeField] private float throwAngle = 35f;
@@ -15,14 +26,20 @@ namespace BirdGame.Bird.Core
         [Header("References")]
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private Transform throwOrigin;
+        #endregion
 
+        #region Private Fields
         private Bird_EggCarrier _carrier;
         private Vector3[] _trajectoryPoints;
         private bool _isAiming;
+        #endregion
 
+        #region Properties
         public Vector3 ThrowVelocity { get; private set; }
         public bool IsAiming => _isAiming;
+        #endregion
 
+        #region Unity Lifecycle
         private void Awake()
         {
             _carrier = GetComponent<Bird_EggCarrier>();
@@ -42,7 +59,9 @@ namespace BirdGame.Bird.Core
 
             UpdateTrajectory();
         }
+        #endregion
 
+        #region Aiming
         public void StartAiming()
         {
             if (_carrier.CurrentCarryCount == 0) return;
@@ -73,7 +92,9 @@ namespace BirdGame.Bird.Core
             _carrier.ThrowOne(velocity.normalized, velocity.magnitude);
             StopAiming();
         }
+        #endregion
 
+        #region Trajectory Calculation
         private void UpdateTrajectory()
         {
             var origin = throwOrigin != null ? throwOrigin.position : transform.position;
@@ -104,7 +125,7 @@ namespace BirdGame.Bird.Core
             for (int i = 0; i < trajectoryResolution; i++)
             {
                 float t = i * trajectoryTimeStep;
-                _trajectoryPoints[i] = origin + velocity * t + 0.5f * gravity * t * t;
+                _trajectoryPoints[i] = origin + velocity * t + GRAVITY_MULTIPLIER * gravity * t * t;
             }
         }
 
@@ -115,20 +136,21 @@ namespace BirdGame.Bird.Core
             var gravity = Physics.gravity;
 
             // Solve quadratic for y = 0 (ground level)
-            float a = 0.5f * gravity.y;
+            float a = GRAVITY_MULTIPLIER * gravity.y;
             float b = velocity.y;
             float c = origin.y;
 
-            float discriminant = b * b - 4 * a * c;
+            float discriminant = b * b - QUADRATIC_DISCRIMINANT_MULTIPLIER * a * c;
             if (discriminant < 0) return origin;
 
-            float t = (-b - Mathf.Sqrt(discriminant)) / (2 * a);
+            float t = (-b - Mathf.Sqrt(discriminant)) / (QUADRATIC_MULTIPLIER * a);
             if (t < 0)
             {
-                t = (-b + Mathf.Sqrt(discriminant)) / (2 * a);
+                t = (-b + Mathf.Sqrt(discriminant)) / (QUADRATIC_MULTIPLIER * a);
             }
 
-            return origin + velocity * t + 0.5f * gravity * t * t;
+            return origin + velocity * t + GRAVITY_MULTIPLIER * gravity * t * t;
         }
+        #endregion
     }
 }

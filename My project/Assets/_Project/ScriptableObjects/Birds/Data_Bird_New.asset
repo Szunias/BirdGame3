@@ -19,11 +19,16 @@ MonoBehaviour:
   stealTimeMultiplier: 1
   eggCarryCapacity: 3
   groundSpeed: 10
-  flightSpeed: 12
-  climbSpeed: 8
+  flightSpeed: 27
+  climbSpeed: 9
   diveSpeed: 18
-  acceleration: 50
+  acceleration: 70
   gravity: 20
   flightGravity: 0
+  jumpHeight: 1.5
+  takeoffBoost: 2
+  groundRotationSpeed: 10
+  flightRotationSpeed: 5
+  flightHoldThreshold: 0.3
   canFly: 1
   canHover: 0

@@ -13,12 +13,35 @@ namespace BirdGame.Network.Core
         [Header("Fallback")]
         [SerializeField] private GameObject defaultBirdPrefab;
 
+        private bool _hasSpawnedLocalPlayer;
+
+        private void Awake()
+        {
+            if (NetworkManager.Singleton == null) return;
+
+            // Disable automatic player spawning BEFORE network starts
+            NetworkManager.Singleton.NetworkConfig.PlayerPrefab = null;
+
+            // Subscribe to events in Awake to ensure we catch them before Net_Bootstrap starts host
+            NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
+            Debug.Log("Net_PlayerSpawner: Initialized in Awake, subscribed to network events");
+        }
+
         private void Start()
         {
-            if (NetworkManager.Singleton != null)
+            if (NetworkManager.Singleton == null) return;
+
+            // Double-check PlayerPrefab is still disabled
+            NetworkManager.Singleton.NetworkConfig.PlayerPrefab = null;
+
+            // If host already started (e.g., Net_Bootstrap ran first), spawn the local player now
+            // But only if we haven't already spawned via OnClientConnected
+            if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.IsClient && !_hasSpawnedLocalPlayer)
             {
-                NetworkManager.Singleton.OnServerStarted += OnServerStarted;
-                NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+                Debug.Log("Net_PlayerSpawner: Host already running, spawning local player now");
+                SpawnPlayerForClient(NetworkManager.Singleton.LocalClientId);
             }
         }
 
@@ -35,10 +58,13 @@ namespace BirdGame.Network.Core
         {
             // Disable default player prefab spawning - we handle it manually
             NetworkManager.Singleton.NetworkConfig.PlayerPrefab = null;
+            Debug.Log($"Net_PlayerSpawner: Server started. SpawnPoints count: {(spawnPoints != null ? spawnPoints.Length : 0)}");
         }
 
         private void OnClientConnected(ulong clientId)
         {
+            Debug.Log($"Net_PlayerSpawner: OnClientConnected called for client {clientId}. IsServer: {NetworkManager.Singleton.IsServer}");
+
             if (!NetworkManager.Singleton.IsServer) return;
 
             SpawnPlayerForClient(clientId);
@@ -46,6 +72,8 @@ namespace BirdGame.Network.Core
 
         private void SpawnPlayerForClient(ulong clientId)
         {
+            Debug.Log($"Net_PlayerSpawner: SpawnPlayerForClient called for client {clientId}");
+
             GameObject prefabToSpawn = GetBirdPrefab();
             if (prefabToSpawn == null)
             {
@@ -56,17 +84,24 @@ namespace BirdGame.Network.Core
             Vector3 spawnPos = GetSpawnPosition(clientId);
             Quaternion spawnRot = Quaternion.identity;
 
+            Debug.Log($"Net_PlayerSpawner: Instantiating {prefabToSpawn.name} at position {spawnPos}");
             GameObject playerInstance = Instantiate(prefabToSpawn, spawnPos, spawnRot);
             NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
 
             if (networkObject != null)
             {
                 networkObject.SpawnAsPlayerObject(clientId);
-                Debug.Log($"Net_PlayerSpawner: Spawned bird for client {clientId}");
+                Debug.Log($"Net_PlayerSpawner: Successfully spawned {prefabToSpawn.name} for client {clientId} at {spawnPos}");
+
+                // Track that we've spawned the local player to prevent double-spawn
+                if (clientId == NetworkManager.Singleton.LocalClientId)
+                {
+                    _hasSpawnedLocalPlayer = true;
+                }
             }
             else
             {
-                Debug.LogError("Net_PlayerSpawner: Bird prefab missing NetworkObject component!");
+                Debug.LogError($"Net_PlayerSpawner: Bird prefab {prefabToSpawn.name} missing NetworkObject component!");
                 Destroy(playerInstance);
             }
         }
@@ -91,11 +126,14 @@ namespace BirdGame.Network.Core
         {
             if (spawnPoints == null || spawnPoints.Length == 0)
             {
+                Debug.LogWarning("Net_PlayerSpawner: No spawn points set! Spawning at Vector3.zero");
                 return Vector3.zero;
             }
 
             int index = (int)(clientId % (ulong)spawnPoints.Length);
-            return spawnPoints[index].position;
+            Vector3 pos = spawnPoints[index].position;
+            Debug.Log($"Net_PlayerSpawner: Spawning client {clientId} at spawn point {index} -> {pos}");
+            return pos;
         }
     }
 }

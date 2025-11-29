@@ -4,43 +4,66 @@ using UnityEngine.InputSystem;
 
 namespace BirdGame.Managers
 {
+    /// <summary>
+    /// Debug utility for starting/restarting matches during development.
+    /// Single Responsibility: Debug controls for match flow.
+    /// </summary>
     public class Debug_MatchStarter : MonoBehaviour
     {
+        #region Constants
+        private const float GUI_AREA_X = 10f;
+        private const float GUI_AREA_Y = 10f;
+        private const float GUI_AREA_WIDTH = 300f;
+        private const float GUI_AREA_HEIGHT = 100f;
+        #endregion
+
+        #region Unity Lifecycle
         private void Update()
         {
-            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
+            if (!IsServerRunning()) return;
 
-            if (Keyboard.current.pKey.wasPressedThisFrame)
+            HandleStartRestartInput();
+            HandleStatusLogInput();
+        }
+        #endregion
+
+        #region Input Handling
+        private bool IsServerRunning()
+        {
+            return NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer;
+        }
+
+        private void HandleStartRestartInput()
+        {
+            if (!Keyboard.current.pKey.wasPressedThisFrame) return;
+            if (Mgr_Match.Instance == null) return;
+
+            if (Mgr_Match.Instance.CurrentState == MatchState.Waiting)
             {
-                if (Mgr_Match.Instance != null)
-                {
-                    if (Mgr_Match.Instance.CurrentState == MatchState.Waiting)
-                    {
-                        Debug.Log("[Debug] Starting match...");
-                        Mgr_Match.Instance.StartMatch();
-                    }
-                    else if (Mgr_Match.Instance.CurrentState == MatchState.End)
-                    {
-                        Debug.Log("[Debug] Restarting match...");
-                        Mgr_Match.Instance.RestartMatch();
-                    }
-                }
+                Mgr_Match.Instance.StartMatch();
             }
-
-            if (Keyboard.current.oKey.wasPressedThisFrame)
+            else if (Mgr_Match.Instance.CurrentState == MatchState.End)
             {
-                if (Mgr_Match.Instance != null)
-                {
-                    Debug.Log($"[Debug] Match State: {Mgr_Match.Instance.CurrentState}, Time: {Mgr_Match.Instance.PhaseTimeRemaining:F1}s");
-                }
+                Mgr_Match.Instance.RestartMatch();
             }
         }
 
+        private void HandleStatusLogInput()
+        {
+            if (!Keyboard.current.oKey.wasPressedThisFrame) return;
+            if (Mgr_Match.Instance == null) return;
+
+            Debug.Log($"[Debug] Match State: {Mgr_Match.Instance.CurrentState}, Time: {Mgr_Match.Instance.PhaseTimeRemaining:F1}s");
+        }
+        #endregion
+
+        #region Debug GUI
         private void OnGUI()
         {
             if (Mgr_Match.Instance == null) return;
 
-            GUILayout.BeginArea(new Rect(10, 10, 300, 100));
+            GUILayout.BeginArea(new Rect(GUI_AREA_X, GUI_AREA_Y, GUI_AREA_WIDTH, GUI_AREA_HEIGHT));
+
             GUILayout.Label($"State: {Mgr_Match.Instance.CurrentState}");
             GUILayout.Label($"Time: {Mgr_Match.Instance.PhaseTimeRemaining:F1}s");
 
@@ -50,7 +73,9 @@ namespace BirdGame.Managers
             }
 
             GUILayout.Label("P = Start/Restart | O = Log Status");
+
             GUILayout.EndArea();
         }
+        #endregion
     }
 }

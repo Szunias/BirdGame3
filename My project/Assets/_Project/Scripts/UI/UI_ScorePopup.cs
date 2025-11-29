@@ -22,6 +22,7 @@ namespace BirdGame.UI
         private float _spawnTime;
         private Vector3 _startPosition;
         private Vector3 _startScale;
+        private Camera _mainCamera;
 
         private void Awake()
         {
@@ -30,6 +31,7 @@ namespace BirdGame.UI
                 canvasGroup = GetComponent<CanvasGroup>();
             }
             _startScale = transform.localScale;
+            _mainCamera = Camera.main;
         }
 
         public void Initialize(int score, Vector3 worldPosition)
@@ -83,9 +85,9 @@ namespace BirdGame.UI
             }
 
             // Billboard - face camera
-            if (Camera.main != null)
+            if (_mainCamera != null)
             {
-                transform.rotation = Camera.main.transform.rotation;
+                transform.rotation = _mainCamera.transform.rotation;
             }
         }
     }

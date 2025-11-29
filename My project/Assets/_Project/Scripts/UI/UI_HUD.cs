@@ -5,8 +5,19 @@ using UnityEngine.UI;
 
 namespace BirdGame.UI
 {
+    /// <summary>
+    /// Main HUD controller displaying match info, scores, and timer.
+    /// Single Responsibility: HUD display and updates.
+    /// </summary>
     public class UI_HUD : MonoBehaviour
     {
+        #region Constants
+        private const float SECONDS_PER_MINUTE = 60f;
+        private const int TEAM_ONE_ID = 1;
+        private const int TEAM_TWO_ID = 2;
+        #endregion
+
+        #region Serialized Fields
         [Header("Timer")]
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI phaseText;
@@ -24,10 +35,31 @@ namespace BirdGame.UI
         [SerializeField] private Color heistColor = new Color(0.8f, 0.6f, 0.2f);
         [SerializeField] private Color frenzyColor = new Color(0.9f, 0.2f, 0.2f);
         [SerializeField] private Color waitingColor = new Color(0.5f, 0.5f, 0.5f);
+        #endregion
 
+        #region Private Fields
         private MatchState _lastState;
+        #endregion
 
+        #region Unity Lifecycle
         private void Start()
+        {
+            SubscribeToMatchEvents();
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribeFromMatchEvents();
+        }
+
+        private void Update()
+        {
+            UpdateEggCount();
+        }
+        #endregion
+
+        #region Event Subscription
+        private void SubscribeToMatchEvents()
         {
             if (Mgr_Match.Instance != null)
             {
@@ -39,7 +71,7 @@ namespace BirdGame.UI
             }
         }
 
-        private void OnDestroy()
+        private void UnsubscribeFromMatchEvents()
         {
             if (Mgr_Match.Instance != null)
             {
@@ -47,12 +79,9 @@ namespace BirdGame.UI
                 Mgr_Match.Instance.OnTimerUpdated.RemoveListener(OnTimerUpdated);
             }
         }
+        #endregion
 
-        private void Update()
-        {
-            UpdateEggCount();
-        }
-
+        #region Event Handlers
         private void OnMatchStateChanged(MatchState state)
         {
             _lastState = state;
@@ -63,13 +92,15 @@ namespace BirdGame.UI
         {
             UpdateTimerDisplay(timeRemaining);
         }
+        #endregion
 
+        #region Display Updates
         private void UpdateTimerDisplay(float timeRemaining)
         {
             if (timerText == null) return;
 
-            int minutes = Mathf.FloorToInt(timeRemaining / 60f);
-            int seconds = Mathf.FloorToInt(timeRemaining % 60f);
+            int minutes = Mathf.FloorToInt(timeRemaining / SECONDS_PER_MINUTE);
+            int seconds = Mathf.FloorToInt(timeRemaining % SECONDS_PER_MINUTE);
             timerText.text = $"{minutes:00}:{seconds:00}";
         }
 
@@ -113,14 +144,16 @@ namespace BirdGame.UI
             int max = Mgr_EggSpawner.Instance.MaxEggs;
             eggCountText.text = $"{current}/{max}";
         }
+        #endregion
 
+        #region Public Methods
         public void UpdateTeamScore(int team, int score)
         {
-            if (team == 1 && team1ScoreText != null)
+            if (team == TEAM_ONE_ID && team1ScoreText != null)
             {
                 team1ScoreText.text = score.ToString();
             }
-            else if (team == 2 && team2ScoreText != null)
+            else if (team == TEAM_TWO_ID && team2ScoreText != null)
             {
                 team2ScoreText.text = score.ToString();
             }
@@ -137,5 +170,6 @@ namespace BirdGame.UI
                 team2ScoreText.text = team2Score.ToString();
             }
         }
+        #endregion
     }
 }

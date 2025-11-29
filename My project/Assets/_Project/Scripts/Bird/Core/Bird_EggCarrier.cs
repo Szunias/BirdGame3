@@ -6,8 +6,17 @@ using UnityEngine.Events;
 
 namespace BirdGame.Bird.Core
 {
+    /// <summary>
+    /// Handles egg carrying, dropping, and throwing.
+    /// Single Responsibility: Egg inventory management.
+    /// </summary>
     public class Bird_EggCarrier : NetworkBehaviour, IBirdCarrier
     {
+        #region Constants
+        private const float THROW_UP_COMPONENT = 0.3f;
+        #endregion
+
+        #region Serialized Fields
         [Header("Configuration")]
         [SerializeField] private int carryCapacity = 3;
         [SerializeField] private Transform carryAttachPoint;
@@ -18,13 +27,19 @@ namespace BirdGame.Bird.Core
         public UnityEvent<ICarryable> OnEggPickedUp;
         public UnityEvent<ICarryable> OnEggDropped;
         public UnityEvent<ICarryable> OnEggThrown;
+        #endregion
 
+        #region Private Fields
         private List<ICarryable> _carriedItems = new List<ICarryable>();
+        #endregion
 
+        #region Properties
         public int CarryCapacity => carryCapacity;
         public int CurrentCarryCount => _carriedItems.Count;
         public Transform CarryAttachPoint => carryAttachPoint;
+        #endregion
 
+        #region Pickup
         public bool CanPickup(ICarryable item)
         {
             if (item == null) return false;
@@ -42,7 +57,9 @@ namespace BirdGame.Bird.Core
             OnEggPickedUp?.Invoke(item);
             return true;
         }
+        #endregion
 
+        #region Drop
         public void DropAll()
         {
             if (!IsServer)
@@ -58,7 +75,6 @@ namespace BirdGame.Bird.Core
                 var item = _carriedItems[i];
                 _carriedItems.RemoveAt(i);
 
-                // Notify egg to detach visually
                 NotifyDetach(item);
 
                 item.OnDropped(dropVelocity);
@@ -79,14 +95,15 @@ namespace BirdGame.Bird.Core
             var item = _carriedItems[_carriedItems.Count - 1];
             _carriedItems.RemoveAt(_carriedItems.Count - 1);
 
-            // Notify egg to detach visually
             NotifyDetach(item);
 
             var dropVelocity = Vector3.down * dropForce;
             item.OnDropped(dropVelocity);
             OnEggDropped?.Invoke(item);
         }
+        #endregion
 
+        #region Throw
         public void ThrowOne(Vector3 direction, float force)
         {
             if (!IsServer)
@@ -100,7 +117,6 @@ namespace BirdGame.Bird.Core
             var item = _carriedItems[_carriedItems.Count - 1];
             _carriedItems.RemoveAt(_carriedItems.Count - 1);
 
-            // Notify egg to detach visually
             NotifyDetach(item);
 
             var throwVelocity = direction.normalized * force;
@@ -108,11 +124,31 @@ namespace BirdGame.Bird.Core
             OnEggThrown?.Invoke(item);
         }
 
+        public void ThrowForward()
+        {
+            ThrowOne(transform.forward + Vector3.up * THROW_UP_COMPONENT, throwForce);
+        }
+        #endregion
+
+        #region Helper Methods
         private void NotifyDetach(ICarryable item)
         {
             item.ClearAttachPoint();
         }
 
+        public ICarryable RemoveOneForDeposit()
+        {
+            if (_carriedItems.Count == 0) return null;
+
+            var item = _carriedItems[_carriedItems.Count - 1];
+            _carriedItems.RemoveAt(_carriedItems.Count - 1);
+            item.ClearAttachPoint();
+
+            return item;
+        }
+        #endregion
+
+        #region Server RPCs
         [ServerRpc]
         private void DropAllServerRpc()
         {
@@ -130,22 +166,6 @@ namespace BirdGame.Bird.Core
         {
             ThrowOne(direction, force);
         }
-
-        public void ThrowForward()
-        {
-            ThrowOne(transform.forward + Vector3.up * 0.3f, throwForce);
-        }
-
-        public ICarryable RemoveOneForDeposit()
-        {
-            if (_carriedItems.Count == 0) return null;
-
-            var item = _carriedItems[_carriedItems.Count - 1];
-            _carriedItems.RemoveAt(_carriedItems.Count - 1);
-            item.ClearAttachPoint();
-
-            return item;
-        }
-
+        #endregion
     }
 }

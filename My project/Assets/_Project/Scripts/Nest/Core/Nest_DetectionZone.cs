@@ -58,8 +58,11 @@ namespace BirdGame.Nest.Core
 
         private int GetBirdTeamId(GameObject bird)
         {
-            var teamComponent = bird.GetComponent<IBirdTeam>();
-            return teamComponent != null ? teamComponent.TeamId : -1;
+            if (bird.TryGetComponent<IBirdTeam>(out var teamComponent))
+            {
+                return teamComponent.TeamId;
+            }
+            return -1;
         }
     }
 }
