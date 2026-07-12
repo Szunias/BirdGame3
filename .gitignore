@@ -54,3 +54,6 @@ Thumbs.db
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+# Local AI tool config
+.claude/
